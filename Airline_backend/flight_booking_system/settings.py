@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+from decouple import config
 import pymysql
 pymysql.install_as_MySQLdb()
 
@@ -25,9 +27,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-!o4+i77)46@$nimbpjab8rj0!7zj=^m=51qx6al-i((=*)eh5@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -77,10 +79,10 @@ TEMPLATES = [
 # CORS settings for React integration
 CORS_ALLOW_ALL_ORIGINS = True  # Only for development, set specific origins in production
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # React frontend running on port 3000
-    "http://127.0.0.1:5173",  # Alternative for localhost
-]
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:5173",  # React frontend running on port 3000
+#     "http://127.0.0.1:5173",  # Alternative for localhost
+# ]
 
 WSGI_APPLICATION = 'flight_booking_system.wsgi.application'
 
@@ -88,14 +90,24 @@ WSGI_APPLICATION = 'flight_booking_system.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',  # Change to postgresql, oracle as needed
+#         'NAME': 'airline_management1',
+#         'USER': 'root',
+#         'PASSWORD': '12345',
+#         'HOST': 'localhost',
+#         'PORT': '3306',  # Default MySQL port
+#     }
+# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',  # Change to postgresql, oracle as needed
-        'NAME': 'airline_management1',
-        'USER': 'root',
-        'PASSWORD': '12345',
-        'HOST': 'localhost',
-        'PORT': '3306',  # Default MySQL port
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': '3306',
     }
 }
 
@@ -137,6 +149,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
